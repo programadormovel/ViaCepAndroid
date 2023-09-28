@@ -19,6 +19,7 @@ import br.com.viacep.Model.Address;
 import br.com.viacep.Network.ApiClient;
 import br.com.viacep.R;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SearchEndereco extends AppCompatActivity {
@@ -58,103 +59,96 @@ public class SearchEndereco extends AppCompatActivity {
 
     }
 
-    private void getAddress (String cep){
-        if (cep.length() < 8){
-            Toast.makeText(this, "Digite um CEP valido", Toast.LENGTH_SHORT).show();
-        } else {
-            new SearchAddress().execute(cep);
-        }
-    }
-
-    private class SearchAddress extends AsyncTask<String, Void, Address> {
-
-        @Override
-        protected Address doInBackground(String... parans) {
-
-            String cep = parans[0];
-
-                Address address;
-                Call<Address> call = ApiClient.getClient().getAddress(cep);
-
-                try {
-                    Response<Address> response = call.execute();
-                    if (response.isSuccessful()){
-                        address = response.body();
-                        if (address != null && address.getErro() == null) {
-                            return address;
-                        }
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Address address) {
-
-            if (address != null) {
-                showTableAddress();
-
-                mTextViewCep.setText(address.getCep());
-                mTextViewLogradouro.setText(address.getLogradouro());
-                mTextViewComplemento.setText(address.getErro());
-                mTextViewBairro.setText(address.getBairro());
-                mTextViewLocalidade.setText(address.getLocalidade());
-                mTextViewUf.setText(address.getUf());
-                mTextViewDDD.setText(address.getDdd());
-            } else {
-                Toast.makeText(SearchEndereco.this, "Endereço não encontrado", Toast.LENGTH_SHORT).show();
-            }
-
-        }
-    }
-
     private void showTableAddress(){
-
+        //0 visible 4 invisible 8 gone
+        //gone é o valor padrao no layout
         int tableAddress = mLayoutCompatAdressDados.getVisibility();
 
-        if (tableAddress == 0) {
-            mLayoutCompatAdressDados.setVisibility(View.GONE);
-        } else {
+        if (tableAddress == 8) {
             mLayoutCompatAdressDados.setVisibility(View.VISIBLE);
         }
 
     }
 
-//    private void getAddress(String cep){
-//        if(cep.length() < 8){
-//            Toast.makeText(this, "Digite um cep valido", Toast.LENGTH_SHORT).show();
-//        } else {
+    private void getAddress(String cep){
+        //valida se o cep digitado é valido
+        if(cep.length() < 8){
+            Toast.makeText(this, "Digite um cep valido", Toast.LENGTH_SHORT).show();
+        } else {
+            //cria uma chamada(eu acho) que faz um request pegando o cep da api ViaCep
+            Call<Address> call = ApiClient.getClient().getAddress(cep);
+            call.enqueue(new Callback<Address>() {
+                @Override
+                public void onResponse(Call<Address> call, Response<Address> response) {
+                    Address responceBody = response.body();
+
+                    if(responceBody != null && response.body().getErro() == null){
+                        //seta a view com os dados retornados da api
+                        showTableAddress();
+
+                        mTextViewCep.setText(responceBody.getCep());
+                        mTextViewLogradouro.setText(responceBody.getLogradouro());
+                        mTextViewComplemento.setText(responceBody.getErro());
+                        mTextViewBairro.setText(responceBody.getBairro());
+                        mTextViewLocalidade.setText(responceBody.getLocalidade());
+                        mTextViewUf.setText(responceBody.getUf());
+                        mTextViewDDD.setText(responceBody.getDdd());
+
+                    } else {
+                        Toast.makeText(SearchEndereco.this, "Endereço não encontrado, Verifique seu CEP", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                @Override
+                public void onFailure(Call<Address> call, Throwable t) {
+                    Toast.makeText(SearchEndereco.this, "erro", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+
+//    private class SearchAddress extends AsyncTask<String, Void, Address> {
 //
-//            Call<Address> call = ApiClient.getClient().getAddress(cep);
-//            call.enqueue(new Callback<Address>() {
-//                @Override
-//                public void onResponse(Call<Address> call, Response<Address> response) {
+//        @Override
+//        protected Address doInBackground(String... parans) {
 //
-//                    Address responceBody = response.body();
+//            String cep = parans[0];
 //
-//                    if(responceBody != null && response.body().getErro() == null){
-//                        showTableAddress();
+//                Address address;
+//                Call<Address> call = ApiClient.getClient().getAddress(cep);
 //
-//                        mTextViewCep.setText(responceBody.getCep());
-//                        mTextViewLogradouro.setText(responceBody.getLogradouro());
-//                        mTextViewComplemento.setText(responceBody.getErro());
-//                        mTextViewBairro.setText(responceBody.getBairro());
-//                        mTextViewLocalidade.setText(responceBody.getLocalidade());
-//                        mTextViewUf.setText(responceBody.getUf());
-//                        mTextViewDDD.setText(responceBody.getDdd());
-//
-//                    } else {
-//                        Toast.makeText(SearchEndereco.this, "Endereço não encontrado, Verifique seu CEP", Toast.LENGTH_SHORT).show();
+//                try {
+//                    Response<Address> response = call.execute();
+//                    if (response.isSuccessful()){
+//                        address = response.body();
+//                        if (address != null && address.getErro() == null) {
+//                            return address;
+//                        }
 //                    }
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
 //                }
-//                @Override
-//                public void onFailure(Call<Address> call, Throwable t) {
-//                    Toast.makeText(SearchEndereco.this, "erro", Toast.LENGTH_SHORT).show();
-//                }
-//            });
+//
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Address address) {
+//
+//            if (address != null) {
+//                    clearAddress();
+//
+//                    mTextViewCep.setText(address.getCep());
+//                    mTextViewLogradouro.setText(address.getLogradouro());
+//                    mTextViewComplemento.setText(address.getErro());
+//                    mTextViewBairro.setText(address.getBairro());
+//                    mTextViewLocalidade.setText(address.getLocalidade());
+//                    mTextViewUf.setText(address.getUf());
+//                    mTextViewDDD.setText(address.getDdd());
+//            } else {
+//                Toast.makeText(SearchEndereco.this, "Endereço não encontrado", Toast.LENGTH_SHORT).show();
+//            }
+//
 //        }
 //    }
 
