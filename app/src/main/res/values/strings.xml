@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">ViaCep</string>
+    <string name="SeachCep_labelInput">Cep</string>
+    <string name="SearchCep_Button">Pesquisar</string>
+    <string name="SearchCep_Title">Pesquisar Cep</string>
+    <string name="SaveAddress_Button">Salvar</string>
+    <string name="cep_label">Cep</string>
+    <string name="cep_dado">01001-000</string>
+    <string name="logradouro_label">logradouro</string>
+    <string name="logradouro_dado">Praça da Sé</string>
+    <string name="complemento_label">complemento</string>
+    <string name="complemento_dado">lado ímpar</string>
+    <string name="bairro_label">bairro</string>
+    <string name="bairro_dado">Sé</string>
+    <string name="localidade_label">localidade</string>
+    <string name="localidade_dado">São Paulo</string>
+    <string name="uf_label">uf</string>
+    <string name="uf_dado">SP</string>
+    <string name="ddd_label">ddd</string>
+    <string name="ddd_dado">11</string>
+</resources>
