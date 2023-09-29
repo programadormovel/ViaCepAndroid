@@ -5,15 +5,14 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
-import android.os.AsyncTask;
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ProgressBar;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.santalu.maskara.widget.MaskEditText;
-
-import java.io.IOException;
 
 import br.com.viacep.Model.Address;
 import br.com.viacep.Network.ApiClient;
@@ -65,11 +64,19 @@ public class SearchEndereco extends AppCompatActivity {
         }
 
     }
+    public static void hideKeyboard(Activity activity) {
+        View view = activity.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
 
     private void getAddress(String cep){
         //valida se o cep digitado é valido
         if(cep.length() < 8){
             mLayoutCompatAdressDados.setVisibility(View.GONE);
+            hideKeyboard(SearchEndereco.this);
             Toast.makeText(this, "Digite um cep valido", Toast.LENGTH_SHORT).show();
         } else {
             //cria uma chamada(eu acho) que faz um request pegando o cep da api ViaCep
@@ -82,8 +89,10 @@ public class SearchEndereco extends AppCompatActivity {
                     if(responceBody != null && response.body().getErro() == null){
                         //seta a view com os dados retornados da api
                         showTableAddress();
-                        
+
                         mMaskEditTextCep.setText("");
+                        mMaskEditTextCep.clearFocus();
+                        hideKeyboard(SearchEndereco.this);
                         mTextViewCep.setText(responceBody.getCep());
                         mTextViewLogradouro.setText(responceBody.getLogradouro());
                         mTextViewComplemento.setText(responceBody.getErro());
@@ -94,12 +103,14 @@ public class SearchEndereco extends AppCompatActivity {
 
                     } else {
                         mLayoutCompatAdressDados.setVisibility(View.GONE);
+                        hideKeyboard(SearchEndereco.this);
                         Toast.makeText(SearchEndereco.this, "Endereço não encontrado, Verifique seu CEP", Toast.LENGTH_SHORT).show();
                     }
                 }
                 @Override
                 public void onFailure(Call<Address> call, Throwable t) {
                     mLayoutCompatAdressDados.setVisibility(View.GONE);
+                    hideKeyboard(SearchEndereco.this);
                     Toast.makeText(SearchEndereco.this, "erro", Toast.LENGTH_SHORT).show();
                 }
             });
