@@ -38,6 +38,7 @@
                 android:id="@+id/editText_inputAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#D5EDF2"
                 android:inputType="number"
                 app:mask="_____-___"
                 app:maskCharacter="_"/>
@@ -48,6 +49,7 @@
             android:id="@+id/button_searchAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="#D7F205"
             android:text="@string/SearchCep_Button"
             android:paddingStart="40dp"
             android:paddingEnd="40dp"/>

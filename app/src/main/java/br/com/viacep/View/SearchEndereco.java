@@ -69,6 +69,7 @@ public class SearchEndereco extends AppCompatActivity {
     private void getAddress(String cep){
         //valida se o cep digitado é valido
         if(cep.length() < 8){
+            mLayoutCompatAdressDados.setVisibility(View.GONE);
             Toast.makeText(this, "Digite um cep valido", Toast.LENGTH_SHORT).show();
         } else {
             //cria uma chamada(eu acho) que faz um request pegando o cep da api ViaCep
@@ -81,7 +82,8 @@ public class SearchEndereco extends AppCompatActivity {
                     if(responceBody != null && response.body().getErro() == null){
                         //seta a view com os dados retornados da api
                         showTableAddress();
-
+                        
+                        mMaskEditTextCep.setText("");
                         mTextViewCep.setText(responceBody.getCep());
                         mTextViewLogradouro.setText(responceBody.getLogradouro());
                         mTextViewComplemento.setText(responceBody.getErro());
@@ -91,11 +93,13 @@ public class SearchEndereco extends AppCompatActivity {
                         mTextViewDDD.setText(responceBody.getDdd());
 
                     } else {
+                        mLayoutCompatAdressDados.setVisibility(View.GONE);
                         Toast.makeText(SearchEndereco.this, "Endereço não encontrado, Verifique seu CEP", Toast.LENGTH_SHORT).show();
                     }
                 }
                 @Override
                 public void onFailure(Call<Address> call, Throwable t) {
+                    mLayoutCompatAdressDados.setVisibility(View.GONE);
                     Toast.makeText(SearchEndereco.this, "erro", Toast.LENGTH_SHORT).show();
                 }
             });
