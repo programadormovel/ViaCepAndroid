@@ -25,11 +25,10 @@ import retrofit2.Response;
 public class SearchEndereco extends AppCompatActivity {
 
     private MaskEditText mMaskEditTextCep;
-    private AppCompatButton mButtonSearch, mButtonSave;
+    private AppCompatButton mButtonSearch;
     private AppCompatTextView mTextViewCep, mTextViewLogradouro, mTextViewComplemento, mTextViewBairro,
             mTextViewLocalidade, mTextViewUf, mTextViewDDD;
     private LinearLayoutCompat mLayoutCompatAdressDados;
-//    private ProgressBar mProgressBarSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +45,6 @@ public class SearchEndereco extends AppCompatActivity {
 
         mMaskEditTextCep = findViewById(R.id.editText_inputAddress);
         mButtonSearch = findViewById(R.id.button_searchAddress);
-        mButtonSave = findViewById(R.id.button_saveAddress);
         mTextViewCep = findViewById(R.id.cepDataAddress);
         mTextViewLogradouro = findViewById(R.id.logradouroDataAddress);
         mTextViewComplemento = findViewById(R.id.complementoDataAddress);
@@ -55,8 +53,6 @@ public class SearchEndereco extends AppCompatActivity {
         mTextViewUf = findViewById(R.id.ufDataAddress);
         mTextViewDDD = findViewById(R.id.dddDataAddress);
         mLayoutCompatAdressDados = findViewById(R.id.showAdress_layout);
-//        mProgressBarSearch = findViewById(R.id.progressBar_searchAddress);
-
     }
 
     private void showTableAddress(){
