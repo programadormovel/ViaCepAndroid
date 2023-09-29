@@ -88,6 +88,7 @@ public class SearchEndereco extends AppCompatActivity {
 
                     if(responceBody != null && response.body().getErro() == null){
                         //seta a view com os dados retornados da api
+                        hideKeyboard(SearchEndereco.this);
                         showTableAddress();
 
                         mMaskEditTextCep.setText("");
